@@ -1,6 +1,7 @@
 package com.example.mtb.service.serviceimpl;
 
 import com.example.mtb.dto.UserRegistrationRequest;
+import com.example.mtb.dto.UserResponse;
 import com.example.mtb.entity.TheaterOwner;
 import com.example.mtb.entity.User;
 import com.example.mtb.entity.UserDetails;
@@ -19,7 +20,7 @@ public class UserImpl  implements  UserService {
 
 
     @Override
-    public UserDetails userRegistration(UserRegistrationRequest users) {
+    public UserResponse userRegistration(UserRegistrationRequest users) {
         if(userDetailsRepository.existsByEmail(users.email())) {
             throw new UserRegistrationException(" User already exists");
         }
@@ -35,7 +36,7 @@ public class UserImpl  implements  UserService {
                 user.setDateOfBirth(users.dateOfBirth());
 
                 userDetailsRepository.save(user);
-                return user;
+                return new UserResponse(user.getUserId(),user.getUsername(),user.getEmail(),user.getPhoneNumber(),user.getUserRole(),user.getDateOfBirth());
             } else {
 
                 TheaterOwner owner = new TheaterOwner();
@@ -47,7 +48,8 @@ public class UserImpl  implements  UserService {
                 owner.setPhoneNumber(users.phoneNumber());
                 owner.setDateOfBirth(users.dateOfBirth());
 
-                return userDetailsRepository.save(owner);
+                return new UserResponse(owner.getUserId(),owner.getUsername(),owner.getEmail(),owner.getPhoneNumber(),owner.getUserRole(),owner.getDateOfBirth());
+
 
             }
         }
