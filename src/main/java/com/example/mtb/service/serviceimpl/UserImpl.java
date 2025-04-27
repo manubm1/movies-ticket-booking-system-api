@@ -14,6 +14,8 @@ import com.example.mtb.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
@@ -80,6 +82,24 @@ public class UserImpl  implements  UserService {
 
         }else
             throw new UserNotFoundException("User not found ");
+    }
+
+    @Override
+    public String softDelete(String email) {
+        Optional<UserDetails> optionalUserDetails= Optional.ofNullable(userDetailsRepository.findByEmail(email));
+
+        if(optionalUserDetails.isPresent()){
+            UserDetails user =optionalUserDetails.get();
+
+             user.setDelete(user.isDelete());
+             user.setDeletedAt(LocalDateTime.now());
+
+             userDetailsRepository.save(user);
+            return " deleted user profile successfully";
+        }else
+            throw new UserNotFoundException("User not exists");
+
+
     }
 }
 

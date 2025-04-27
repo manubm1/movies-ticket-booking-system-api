@@ -40,4 +40,11 @@ public class UserDetailsController {
 
         return responseBuilder.success(HttpStatus.ACCEPTED,"Profile updated Successfully",details);
     }
+  @DeleteMapping("/profile/{email}")
+    ResponseEntity<ResponseStructure<String>> softDelete(@PathVariable String email){
+
+        String user = userService.softDelete(email);
+        return  responseBuilder.success(HttpStatus.OK," user deleted succcessfully",user);
+    }
+
 }
