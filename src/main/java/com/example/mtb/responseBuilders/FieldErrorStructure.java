@@ -6,9 +6,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ErrorStructure<T> {
+@Builder
+public class FieldErrorStructure<T> {
 
-     int errorCode;
-     String errorMessage;
-     T  error;
+    int statusCode;
+    String message;
+    T error;
 }
