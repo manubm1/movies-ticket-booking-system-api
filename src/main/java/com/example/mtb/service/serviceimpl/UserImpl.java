@@ -53,7 +53,7 @@ public class UserImpl  implements  UserService {
                 owner.setPassword(users.password());
                 owner.setPhoneNumber(users.phoneNumber());
                 owner.setDateOfBirth(users.dateOfBirth());
-
+                userDetailsRepository.save(owner);
                 return new UserResponse(owner.getUserId(),owner.getUsername(),owner.getEmail(),owner.getPhoneNumber(),owner.getUserRole(),owner.getDateOfBirth());
 
 
