@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -25,4 +26,6 @@ public class UserDetails {
     private LocalDate dateOfBirth;
     private  Long  createAt;
     private Long updateAt;
+    private boolean isDelete;
+    private LocalDateTime deletedAt;
 }

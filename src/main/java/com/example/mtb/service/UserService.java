@@ -10,4 +10,6 @@ public interface UserService {
 
 
     UserResponse profileUpdate(String email, UserRequest request);
+
+    String softDelete(String email);
 }
