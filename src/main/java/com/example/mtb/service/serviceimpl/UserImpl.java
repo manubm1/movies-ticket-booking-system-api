@@ -1,16 +1,20 @@
 package com.example.mtb.service.serviceimpl;
 
 import com.example.mtb.dto.UserRegistrationRequest;
+import com.example.mtb.dto.UserRequest;
 import com.example.mtb.dto.UserResponse;
 import com.example.mtb.entity.TheaterOwner;
 import com.example.mtb.entity.User;
 import com.example.mtb.entity.UserDetails;
 import com.example.mtb.enums.UserRole;
+import com.example.mtb.exception.UserNotFoundException;
 import com.example.mtb.exception.UserRegistrationException;
 import com.example.mtb.repository.UserDetailsRepository;
 import com.example.mtb.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -53,6 +57,29 @@ public class UserImpl  implements  UserService {
 
             }
         }
+    }
+
+    @Override
+    public UserResponse profileUpdate(String email, UserRequest request) {
+        Optional<UserDetails> optionalUser = Optional.ofNullable(userDetailsRepository.findByEmail(email));
+
+        if(optionalUser.isPresent()){
+            UserDetails details = optionalUser.get();
+            if(request.username()!=null) {
+                details.setUsername(request.username());
+            }
+            if(request.dateOfBirth()!=null) {
+                details.setDateOfBirth(request.dateOfBirth());
+            }
+            if(request.phoneNumber()!=null) {
+                details.setPhoneNumber(request.phoneNumber());
+            }
+
+            userDetailsRepository.save(details);
+            return new UserResponse(details.getUserId(),details.getUsername(),details.getEmail(),details.getPhoneNumber(),details.getUserRole(),details.getDateOfBirth());
+
+        }else
+            throw new UserNotFoundException("User not found ");
     }
 }
 
