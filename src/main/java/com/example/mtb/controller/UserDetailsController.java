@@ -35,7 +35,7 @@ public class UserDetailsController {
     }
 
     @PatchMapping("/profile/{email}")
-    ResponseEntity<ResponseStructure<UserResponse>> profileUpdate(@PathVariable String email, @RequestBody UserRequest request){
+    ResponseEntity<ResponseStructure<UserResponse>> profileUpdate(@PathVariable String email,@Valid @RequestBody UserRequest request){
         UserResponse details = userService.profileUpdate(email,request);
 
         return responseBuilder.success(HttpStatus.ACCEPTED,"Profile updated Successfully",details);
