@@ -4,6 +4,7 @@ import com.example.mtb.dto.ScreenRegistrationRequest;
 import com.example.mtb.dto.ScreenResponse;
 import com.example.mtb.entity.Screen;
 import com.example.mtb.entity.Theater;
+import com.example.mtb.exception.ScreenNotFoundException;
 import com.example.mtb.exception.TheaterNotFoundException;
 import com.example.mtb.repository.ScreenRepository;
 import com.example.mtb.repository.TheaterRepository;
@@ -55,5 +56,20 @@ public class ScreenServiceImpl implements ScreenService {
         }else
             throw new TheaterNotFoundException(" Theater not found");
 
+    }
+
+
+    @Override
+    public ScreenResponse findScreen(String screenId) {
+        Optional<Screen> optionalScreen = screenRepository.findById(screenId);
+
+        if(optionalScreen.isPresent()){
+            Screen screen = optionalScreen.get();
+
+            return new ScreenResponse(screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows());
+
+
+        }else
+            throw new ScreenNotFoundException("Screen not found by this Screen ID");
     }
 }

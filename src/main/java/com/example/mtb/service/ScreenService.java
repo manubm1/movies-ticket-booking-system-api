@@ -5,4 +5,6 @@ import com.example.mtb.dto.ScreenResponse;
 
 public interface ScreenService {
     ScreenResponse screenRegistration(String theaterId, ScreenRegistrationRequest request);
+
+    ScreenResponse findScreen(String screenId);
 }
