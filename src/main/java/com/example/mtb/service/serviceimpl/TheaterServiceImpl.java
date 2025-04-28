@@ -1,6 +1,7 @@
 package com.example.mtb.service.serviceimpl;
 
 import com.example.mtb.dto.TheaterRegistrationRequest;
+import com.example.mtb.dto.TheaterRequest;
 import com.example.mtb.dto.TheaterResponse;
 import com.example.mtb.entity.Theater;
 import com.example.mtb.entity.TheaterOwner;
@@ -70,4 +71,24 @@ public class TheaterServiceImpl implements TheaterService {
             throw new TheaterNotFoundException(" Theater not exist");
 
     }
+
+    @Override
+    public TheaterResponse updateTheater(String theaterId, TheaterRequest request) {
+        Optional<Theater> optionalTheater = theaterrepository.findById(theaterId);
+
+        if(optionalTheater.isPresent()){
+            Theater existTheater = optionalTheater.get();
+
+            existTheater.setName(request.name());
+            existTheater.setAddress(request.address());
+            existTheater.setCity(request.city());
+            existTheater.setLandmark(request.landmark());
+
+            theaterrepository.save(existTheater);
+            return new TheaterResponse(existTheater.getTheaterId(),existTheater.getName(),existTheater.getAddress(),existTheater.getCity(),existTheater.getLandmark());
+
+        }else
+            throw new TheaterNotFoundException(" Theater not exists");
+    }
 }
+
