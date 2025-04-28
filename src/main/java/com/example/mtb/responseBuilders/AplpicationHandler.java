@@ -1,9 +1,6 @@
 package com.example.mtb.responseBuilders;
 
-import com.example.mtb.exception.TheaterNotFoundException;
-import com.example.mtb.exception.TheaterOwnerNotFoundException;
-import com.example.mtb.exception.UserNotFoundException;
-import com.example.mtb.exception.UserRegistrationException;
+import com.example.mtb.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -54,5 +51,17 @@ public class AplpicationHandler {
         return new ResponseEntity<ErrorStructure<String>>(error,HttpStatus.NOT_FOUND);
 
     }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorStructure<String>> handlerScreenNotFound(ScreenNotFoundException ex){
+        ErrorStructure<String> error = new ErrorStructure<>();
+        error.setErrorCode(HttpStatus.NOT_FOUND.value());
+        error.setErrorMessage(ex.getMessage());
+        error.setError(" Screen Not  exist");
+
+        return new ResponseEntity<ErrorStructure<String>>(error,HttpStatus.NOT_FOUND);
+
+    }
+
 
 }
