@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +26,7 @@ public class TheaterController {
     private ResponseBuilder responseBuilder;
 
 
+    @PreAuthorize("hasAuthority('THEATER_OWNER')")
     @PostMapping("/theater/{email}")
     public ResponseEntity<ResponseStructure<TheaterResponse>> registration(@PathVariable String email, @RequestBody TheaterRegistrationRequest request){
         TheaterResponse theater = theaterService.registration(email,request);

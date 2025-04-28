@@ -12,6 +12,8 @@ import com.example.mtb.exception.UserRegistrationException;
 import com.example.mtb.repository.UserDetailsRepository;
 import com.example.mtb.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -23,6 +25,8 @@ import java.util.Optional;
 public class UserImpl  implements  UserService {
 
     private final UserDetailsRepository userDetailsRepository;
+    @Autowired
+    private final PasswordEncoder passwordEncouder;
 
 
     @Override
@@ -37,7 +41,7 @@ public class UserImpl  implements  UserService {
                 user.setUsername(users.username());
                 user.setEmail(users.email());
                 user.setUserRole(users.userRole());
-                user.setPassword(users.password());
+                user.setPassword(passwordEncouder.encode(users.password()));
                 user.setPhoneNumber(users.phoneNumber());
                 user.setDateOfBirth(users.dateOfBirth());
 
@@ -50,7 +54,7 @@ public class UserImpl  implements  UserService {
                 owner.setUsername(users.username());
                 owner.setEmail(users.email());
                 owner.setUserRole(users.userRole());
-                owner.setPassword(users.password());
+                owner.setPassword(passwordEncouder.encode(users.password()));
                 owner.setPhoneNumber(users.phoneNumber());
                 owner.setDateOfBirth(users.dateOfBirth());
                 userDetailsRepository.save(owner);
