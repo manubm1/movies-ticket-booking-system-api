@@ -3,16 +3,19 @@ package com.example.mtb.service.serviceimpl;
 import com.example.mtb.dto.ScreenRegistrationRequest;
 import com.example.mtb.dto.ScreenResponse;
 import com.example.mtb.entity.Screen;
+import com.example.mtb.entity.Seat;
 import com.example.mtb.entity.Theater;
 import com.example.mtb.exception.ScreenNotFoundException;
 import com.example.mtb.exception.TheaterNotFoundException;
 import com.example.mtb.repository.ScreenRepository;
 import com.example.mtb.repository.TheaterRepository;
 import com.example.mtb.service.ScreenService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +29,7 @@ public class ScreenServiceImpl implements ScreenService {
      private final SeatService seatService;
 
     @Override
-    public ScreenResponse screenRegistration(String theaterId, ScreenRegistrationRequest request) {
+    public Screen screenRegistration(String theaterId, ScreenRegistrationRequest request) {
 
         Optional<Theater> optionalScreen = theaterRepository.findById(theaterId);
 
@@ -52,7 +55,7 @@ public class ScreenServiceImpl implements ScreenService {
             theaterRepository.save(theater);
 
 
-            return new ScreenResponse(request.screenType(),request.capacity(),request.noOfRows(),screen.getSeat());
+            return screen;
 
         }else
             throw new TheaterNotFoundException(" Theater not found");
@@ -61,11 +64,19 @@ public class ScreenServiceImpl implements ScreenService {
 
 
     @Override
+
     public ScreenResponse findScreen(String screenId) {
         Optional<Screen> optionalScreen = screenRepository.findById(screenId);
 
         if(optionalScreen.isPresent()){
             Screen screen = optionalScreen.get();
+            List<Seat> seatlist = new ArrayList<>();
+
+            for(Seat seats: screen.getSeat() ){
+                 Seat seatsl= screen.getSeatId();
+
+            }
+
 
             return new ScreenResponse(screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows(),screen.getSeat());
 

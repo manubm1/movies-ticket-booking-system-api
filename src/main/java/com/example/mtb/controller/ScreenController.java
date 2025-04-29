@@ -2,6 +2,7 @@ package com.example.mtb.controller;
 
 import com.example.mtb.dto.ScreenRegistrationRequest;
 import com.example.mtb.dto.ScreenResponse;
+import com.example.mtb.entity.Screen;
 import com.example.mtb.responseBuilders.ResponseBuilder;
 import com.example.mtb.responseBuilders.ResponseStructure;
 import com.example.mtb.service.ScreenService;
@@ -26,8 +27,8 @@ public class ScreenController {
 
 
     @PostMapping("/screen/{theaterId}")
-    public ResponseEntity<ResponseStructure<ScreenResponse>> screenrRegistration (@PathVariable String theaterId, @RequestBody ScreenRegistrationRequest request){
-        ScreenResponse screen = screenService.screenRegistration(theaterId,request);
+    public ResponseEntity<ResponseStructure<Screen>> screenrRegistration (@PathVariable String theaterId, @RequestBody ScreenRegistrationRequest request){
+        Screen screen = screenService.screenRegistration(theaterId,request);
         return responseBuilder.success(HttpStatus.CREATED,"Screen registered successfully",screen);
     }
 

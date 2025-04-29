@@ -2,9 +2,10 @@ package com.example.mtb.service;
 
 import com.example.mtb.dto.ScreenRegistrationRequest;
 import com.example.mtb.dto.ScreenResponse;
+import com.example.mtb.entity.Screen;
 
 public interface ScreenService {
-    ScreenResponse screenRegistration(String theaterId, ScreenRegistrationRequest request);
+    Screen screenRegistration(String theaterId, ScreenRegistrationRequest request);
 
     ScreenResponse findScreen(String screenId);
 }
