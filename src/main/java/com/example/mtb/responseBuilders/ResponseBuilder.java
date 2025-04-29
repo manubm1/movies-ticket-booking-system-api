@@ -14,6 +14,7 @@ public class ResponseBuilder {
                 .statusCode(status.value())
                 .message(message)
                 .data(data)
+
                 .build();;
 
         return  new ResponseEntity<>(structure,status);

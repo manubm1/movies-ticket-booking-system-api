@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
@@ -23,5 +25,8 @@ public class Screen {
 
     @ManyToOne
     private Theater theater;
+
+    @OneToMany(mappedBy = "screen")
+    private List<Seat> seat;
 
 }

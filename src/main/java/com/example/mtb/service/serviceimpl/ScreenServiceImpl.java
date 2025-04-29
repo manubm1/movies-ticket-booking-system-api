@@ -23,7 +23,7 @@ public class ScreenServiceImpl implements ScreenService {
 
     private final ScreenRepository screenRepository;
     private final TheaterRepository theaterRepository;
-//    private final SeatRepository seatRepository;
+     private final SeatService seatService;
 
     @Override
     public ScreenResponse screenRegistration(String theaterId, ScreenRegistrationRequest request) {
@@ -41,17 +41,18 @@ public class ScreenServiceImpl implements ScreenService {
 //            screen.setUpdatedAt(request.updatedAt());
 
 
+
+
             List<Screen> screenlist = new ArrayList<>();
             screenlist.add(screen);
             theater.setScreen(screenlist);
             screen.setTheater(theater);
-
-//            seatRepository.save(SeattService.genearateSeats(screen);
             screenRepository.save(screen);
+            seatService.genearateSeats(screen);
             theaterRepository.save(theater);
 
 
-            return new ScreenResponse(request.screenType(),request.capacity(),request.noOfRows());
+            return new ScreenResponse(request.screenType(),request.capacity(),request.noOfRows(),screen.getSeat());
 
         }else
             throw new TheaterNotFoundException(" Theater not found");
@@ -66,7 +67,7 @@ public class ScreenServiceImpl implements ScreenService {
         if(optionalScreen.isPresent()){
             Screen screen = optionalScreen.get();
 
-            return new ScreenResponse(screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows());
+            return new ScreenResponse(screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows(),screen.getSeat());
 
 
         }else
