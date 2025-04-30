@@ -27,7 +27,7 @@ public class SeatService {
 
         for (int i = 1; i <= capacity / noOfrows; i++) {
 
-            for (int j = 1; j <= noOfrows; j++) {
+            for (int j = 0; j < noOfrows; j++) {
 
                 Seat seats = new Seat();
                 seats.setSeatname( name+"-" + j);

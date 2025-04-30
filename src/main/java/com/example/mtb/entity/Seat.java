@@ -17,4 +17,13 @@ public class Seat {
 
     @ManyToOne
     private Screen screen;
+
+
+    @Override
+    public String toString() {
+        return "Seat{" +
+                "seatId='" + seatId + '\'' +
+                ", seatname='" + seatname + '\'' +
+                '}';
+    }
 }

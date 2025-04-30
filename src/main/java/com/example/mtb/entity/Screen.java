@@ -26,7 +26,7 @@ public class Screen {
     @ManyToOne
     private Theater theater;
 
-    @OneToMany(mappedBy = "screen")
+    @OneToMany(mappedBy = "screen",fetch = FetchType.EAGER)
     private List<Seat> seat;
 
 }

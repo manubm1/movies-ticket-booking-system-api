@@ -2,6 +2,7 @@ package com.example.mtb.service.serviceimpl;
 
 import com.example.mtb.dto.ScreenRegistrationRequest;
 import com.example.mtb.dto.ScreenResponse;
+import com.example.mtb.dto.SeatResponse;
 import com.example.mtb.entity.Screen;
 import com.example.mtb.entity.Seat;
 import com.example.mtb.entity.Theater;
@@ -14,10 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -64,21 +62,24 @@ public class ScreenServiceImpl implements ScreenService {
 
 
     @Override
-
     public ScreenResponse findScreen(String screenId) {
         Optional<Screen> optionalScreen = screenRepository.findById(screenId);
 
         if(optionalScreen.isPresent()){
             Screen screen = optionalScreen.get();
-            List<Seat> seatlist = new ArrayList<>();
+            List<Seat> seatlist = screen.getSeat();
 
-            for(Seat seats: screen.getSeat() ){
-                 Seat seatsl= screen.getSeatId();
+              List<SeatResponse> seatResponses= new ArrayList<>();
+
+
+            for(Seat seats :seatlist){
+                  SeatResponse response = new SeatResponse(seats.getSeatId(),seats.getSeatname());
+               seatResponses.add(response);
 
             }
 
-
-            return new ScreenResponse(screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows(),screen.getSeat());
+            Collections.sort(seatResponses);
+            return new ScreenResponse(screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows(),seatResponses);
 
 
         }else

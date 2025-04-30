@@ -5,5 +5,5 @@ import com.example.mtb.enums.ScreenType;
 
 import java.util.List;
 
-public record ScreenResponse(ScreenType screenType, int capacity, int noOfRows, List<Seat> seats)  {
+public record ScreenResponse(ScreenType screenType, int capacity, int noOfRows, List<SeatResponse> seats)  {
 }
