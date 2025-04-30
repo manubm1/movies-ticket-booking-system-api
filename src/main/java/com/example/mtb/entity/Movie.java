@@ -1,20 +1,49 @@
 package com.example.mtb.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
+import com.example.mtb.enums.Certificate;
+import com.example.mtb.enums.Gener;
+import jakarta.persistence.*;
+import jakarta.transaction.UserTransaction;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Duration;
+import java.util.Set;
 
 @Entity
+@Getter
+@Setter
+@Table(name = "movie")
+@ToString
 public class Movie {
 
+
+      @Id
+      @GeneratedValue(strategy = GenerationType.UUID)
       private String movieId;
+
+      @Column(name = "title")
       private String title;
+
+      @Column(name = "description")
       private String description;
-      private String[] cast;
+
+      @ElementCollection
+      private Set<String> cast;
+
+      @Column(name = "runtime")
       private Duration runtime;
-      private certificate certificate;
-      private gener  gener;
+
+
+      @Enumerated(value = EnumType.STRING)
+      @Column(name = "certificate")
+      private Certificate certificate;
+
+
+      @Enumerated(value = EnumType.STRING)
+      @Column(name = "genre")
+      private Gener genre;
 
 }
