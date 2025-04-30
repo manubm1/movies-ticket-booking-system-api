@@ -10,7 +10,7 @@ public class AuditorAwareImpl  implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
         String username = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .map(auth ->auth.getName() )
+                .map(auth->auth.getName())
                 .orElse("System");
         return Optional.of(username);
     }

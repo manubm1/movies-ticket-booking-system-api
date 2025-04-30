@@ -9,12 +9,14 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.Instant;
 import java.util.List;
 
 @Setter
 @Getter
 @Entity
 @EntityListeners(AuditingEntityListener.class)
+@Table(name = "theater")
 public class Theater {
 
     @Id
@@ -36,11 +38,11 @@ public class Theater {
 
     @CreatedDate
     @Column(name = "create_at",nullable = false,updatable = false)
-    private Long createAt;
+    private Instant createAt;
 
     @LastModifiedDate
     @Column(name = "update_at",nullable = false,updatable = false)
-    private  Long updatedAt;
+    private Instant updatedAt;
 
     @CreatedBy
     @Column(name = "create_by",nullable = false,updatable = false)
@@ -50,7 +52,7 @@ public class Theater {
     @Column(name = "update_by",nullable = false)
     private String updatedBy;
 
-    @ManyToOne()
+    @ManyToOne
     private TheaterOwner theaterOwner;
 
     @OneToMany(mappedBy = "theater")
