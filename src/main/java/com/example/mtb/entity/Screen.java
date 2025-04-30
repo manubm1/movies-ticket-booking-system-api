@@ -10,6 +10,8 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
@@ -52,5 +54,8 @@ public class Screen {
 
     @ManyToOne
     private Theater theater;
+
+    @OneToMany(mappedBy = "screen",fetch = FetchType.EAGER)
+    private List<Seat> seat;
 
 }
