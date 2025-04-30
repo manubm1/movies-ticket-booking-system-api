@@ -2,19 +2,20 @@ package com.example.mtb.service.serviceimpl;
 
 import com.example.mtb.dto.ScreenRegistrationRequest;
 import com.example.mtb.dto.ScreenResponse;
+import com.example.mtb.dto.SeatResponse;
 import com.example.mtb.entity.Screen;
+import com.example.mtb.entity.Seat;
 import com.example.mtb.entity.Theater;
 import com.example.mtb.exception.ScreenNotFoundException;
 import com.example.mtb.exception.TheaterNotFoundException;
 import com.example.mtb.repository.ScreenRepository;
 import com.example.mtb.repository.TheaterRepository;
 import com.example.mtb.service.ScreenService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -23,10 +24,10 @@ public class ScreenServiceImpl implements ScreenService {
 
     private final ScreenRepository screenRepository;
     private final TheaterRepository theaterRepository;
-//    private final SeatRepository seatRepository;
+     private final SeatService seatService;
 
     @Override
-    public ScreenResponse screenRegistration(String theaterId, ScreenRegistrationRequest request) {
+    public Screen screenRegistration(String theaterId, ScreenRegistrationRequest request) {
 
         Optional<Theater> optionalScreen = theaterRepository.findById(theaterId);
 
@@ -41,17 +42,18 @@ public class ScreenServiceImpl implements ScreenService {
 //            screen.setUpdatedAt(request.updatedAt());
 
 
+
+
             List<Screen> screenlist = new ArrayList<>();
             screenlist.add(screen);
             theater.setScreen(screenlist);
             screen.setTheater(theater);
-
-//            seatRepository.save(SeattService.genearateSeats(screen);
             screenRepository.save(screen);
+            seatService.genearateSeats(screen);
             theaterRepository.save(theater);
 
 
-            return new ScreenResponse(request.screenType(),request.capacity(),request.noOfRows());
+            return screen;
 
         }else
             throw new TheaterNotFoundException(" Theater not found");
@@ -65,8 +67,19 @@ public class ScreenServiceImpl implements ScreenService {
 
         if(optionalScreen.isPresent()){
             Screen screen = optionalScreen.get();
+            List<Seat> seatlist = screen.getSeat();
 
-            return new ScreenResponse(screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows());
+              List<SeatResponse> seatResponses= new ArrayList<>();
+
+
+            for(Seat seats :seatlist){
+                  SeatResponse response = new SeatResponse(seats.getSeatId(),seats.getSeatname());
+               seatResponses.add(response);
+
+            }
+
+            Collections.sort(seatResponses);
+            return new ScreenResponse(screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows(),seatResponses);
 
 
         }else
