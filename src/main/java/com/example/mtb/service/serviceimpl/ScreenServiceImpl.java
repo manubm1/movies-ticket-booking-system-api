@@ -1,5 +1,6 @@
 package com.example.mtb.service.serviceimpl;
 
+import com.example.mtb.dto.ScreenRegisterResponse;
 import com.example.mtb.dto.ScreenRegistrationRequest;
 import com.example.mtb.dto.ScreenResponse;
 import com.example.mtb.dto.SeatResponse;
@@ -27,7 +28,7 @@ public class ScreenServiceImpl implements ScreenService {
      private final SeatService seatService;
 
     @Override
-    public Screen screenRegistration(String theaterId, ScreenRegistrationRequest request) {
+    public ScreenRegisterResponse screenRegistration(String theaterId, ScreenRegistrationRequest request) {
 
         Optional<Theater> optionalScreen = theaterRepository.findById(theaterId);
 
@@ -53,7 +54,7 @@ public class ScreenServiceImpl implements ScreenService {
             theaterRepository.save(theater);
 
 
-            return screen;
+            return new ScreenRegisterResponse(screen.getScreenId(),screen.getScreenType(),screen.getCapacity(),screen.getNoOfRows());
 
         }else
             throw new TheaterNotFoundException(" Theater not found");
