@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Pattern;
 
 import java.time.LocalDate;
 
-public record UserRegistrationRequest (@NotNull(message = "UserName is Required")  @Pattern(regexp = "^[A-Za-z0-9_@]{5,15}$",message = "Must be 5–15 characters with only letters, numbers, _ and @")
+public record UserRegistrationRequest (@NotNull(message = "UserName is Required")  @Pattern(regexp = "^[A-Za-z0-9_@]{3,15}$",message = "Must be 3–15 characters with only letters, numbers, _ and @")
                                        String username,
                                        @NotNull(message = "email is required") @Email(message = "Email is required")
                                        String email,
