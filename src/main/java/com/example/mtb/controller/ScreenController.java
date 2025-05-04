@@ -3,6 +3,7 @@ package com.example.mtb.controller;
 import com.example.mtb.dto.ScreenRegisterResponse;
 import com.example.mtb.dto.ScreenRegistrationRequest;
 import com.example.mtb.dto.ScreenResponse;
+import com.example.mtb.dto.ShowResponse;
 import com.example.mtb.entity.Screen;
 import com.example.mtb.responseBuilders.ResponseBuilder;
 import com.example.mtb.responseBuilders.ResponseStructure;
@@ -40,7 +41,4 @@ public class ScreenController {
         return  responseBuilder.success(HttpStatus.FOUND,"Screen fecthed successfully",screen);
 
     }
-
-
-
 }

@@ -63,5 +63,16 @@ public class AplpicationHandler {
 
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorStructure<String>> handlerShowNotFound(ShowNotFoundException ex){
+        ErrorStructure<String> error = new ErrorStructure<>();
+        error.setErrorCode(HttpStatus.NOT_FOUND.value());
+        error.setErrorMessage(ex.getMessage());
+        error.setError("Already show is fixed for thi time interval");
+
+        return new ResponseEntity<ErrorStructure<String>>(error,HttpStatus.NOT_FOUND);
+
+    }
+
 
 }

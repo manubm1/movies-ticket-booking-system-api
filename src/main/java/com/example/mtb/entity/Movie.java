@@ -8,10 +8,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.stereotype.Component;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Set;
-
+@Component
 @Entity
 @Getter
 @Setter
@@ -45,5 +47,8 @@ public class Movie {
       @Enumerated(value = EnumType.STRING)
       @Column(name = "genre")
       private Gener genre;
+
+      @OneToMany(mappedBy = "movie")
+      private List<Show> show;
 
 }

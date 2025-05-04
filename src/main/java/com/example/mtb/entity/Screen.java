@@ -59,4 +59,7 @@ public class Screen {
     @OneToMany(mappedBy = "screen",fetch = FetchType.EAGER)
     private List<Seat> seat;
 
+    @OneToMany(mappedBy = "screen")
+    private List<Show> show;
+
 }

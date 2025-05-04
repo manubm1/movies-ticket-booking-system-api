@@ -6,7 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ScreenRepository extends JpaRepository<Screen,String> {
+public interface ShowRepository extends JpaRepository<Show,String> {
 
-   public  List<Show> findByScreenId(String screenId);
+
+
+   public  List<Show> findByScreen_ScreenId(String screenId);
 }
