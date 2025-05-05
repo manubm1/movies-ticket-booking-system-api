@@ -51,4 +51,7 @@ public class Movie {
       @OneToMany(mappedBy = "movie")
       private List<Show> show;
 
+      @OneToMany(mappedBy = "movie")
+      private List<Feedback> feedbacks;
+
 }
