@@ -10,5 +10,5 @@ public record MovieResponse(String title,
                             Set<CastResponse> cast,
                             Certificate certificate,
                             Gener gener,
-                            double rating) {
+                            String rating) {
 }

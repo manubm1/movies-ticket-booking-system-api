@@ -35,7 +35,7 @@ public class MovieServiceImpl implements MovieService {
 
         }
         double average = sum % i;
-
+        String averages= average+"/5";
 
 
 
@@ -49,6 +49,6 @@ public class MovieServiceImpl implements MovieService {
                 castResponse.add(response);
             }
         }
-        return new MovieResponse(movie.getTitle(), movie.getDescription(), castResponse, movie.getCertificate(), movie.getGenre(), average);
+        return new MovieResponse(movie.getTitle(), movie.getDescription(), castResponse, movie.getCertificate(), movie.getGenre(), averages);
     }
 }
