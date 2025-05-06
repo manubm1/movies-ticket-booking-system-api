@@ -25,7 +25,7 @@ public class ShowController {
      @PostMapping("/theater/{theaterId}/screen/{screenId}/movie/{movieId}")
     public ResponseEntity<ResponseStructure<ShowResponse>> createShow(@PathVariable String theaterId,@PathVariable String screenId, @PathVariable String movieId, @RequestParam Instant startsAt){
         ShowResponse response = showService.createShow(theaterId,screenId,movieId,startsAt);
-        return responseBuilder.success(HttpStatus.CREATED,"Show cretaed successsfully",response);
+        return responseBuilder.success(HttpStatus.CREATED,"Show created successfully",response);
     }
 
 }
