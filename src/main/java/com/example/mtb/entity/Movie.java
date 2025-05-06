@@ -7,7 +7,10 @@ import jakarta.transaction.UserTransaction;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.data.repository.cdi.Eager;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -32,8 +35,9 @@ public class Movie {
       @Column(name = "description")
       private String description;
 
-      @ElementCollection
+      @ElementCollection @Fetch(FetchMode.JOIN)
       private Set<String> cast;
+
 
       @Column(name = "runtime")
       private Duration runtime;
@@ -51,7 +55,7 @@ public class Movie {
       @OneToMany(mappedBy = "movie")
       private List<Show> show;
 
-      @OneToMany(mappedBy = "movie")
+      @OneToMany(mappedBy = "movie",fetch = FetchType.EAGER)
       private List<Feedback> feedbacks;
 
 }

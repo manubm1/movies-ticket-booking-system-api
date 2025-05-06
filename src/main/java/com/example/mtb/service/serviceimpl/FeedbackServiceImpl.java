@@ -43,12 +43,13 @@ public class FeedbackServiceImpl implements FeedbackService {
 
          List<Feedback> feedbacklist = new ArrayList<>();
          feedbacklist.add(feedback);
-         movie.setFeedbacks(feedbacklist);
+         feedback.setMovie(movie);
           user.setFeedback(feedbacklist);
 
 
 
          feedbackRepository.save(feedback);
+         movieRepository.save(movie);
 
 
          return  new FeedbackResponse(feedback.getRating(),feedback.getReviews());
