@@ -16,6 +16,8 @@ public class AppEMV {
     @Setter
     public static class Token{
         private String screte;
+        private Long accessToken;
+        private Long refreshToken;
 
 
     }

@@ -1,10 +1,13 @@
 package com.example.mtb.service.serviceimpl;
 
+import com.example.mtb.config.AppEMV;
 import com.example.mtb.dto.AuthResponse;
 import com.example.mtb.dto.LoginRequest;
 import com.example.mtb.entity.UserDetails;
+import com.example.mtb.enums.TokenType;
 import com.example.mtb.exception.UserNotFoundException;
 import com.example.mtb.repository.UserDetailsRepository;
+import com.example.mtb.security.jwt.AuthenticateTokenDetails;
 import com.example.mtb.security.jwt.JWTServiceImpl;
 import com.example.mtb.security.jwt.TokenPayload;
 import com.example.mtb.service.AuthService;
@@ -25,8 +28,9 @@ public class AuthServiceImpl implements  AuthService{
 
 
     private final JWTServiceImpl jwtService;
-    private AuthenticationManager authenticationManager;
+    private final  AuthenticationManager authenticationManager;
     private  final UserDetailsRepository userDetailsRepository;
+    private final AppEMV emv;
 
 
 
@@ -35,7 +39,7 @@ public class AuthServiceImpl implements  AuthService{
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(loginRequest.email(),loginRequest.password());
         Authentication authentication = authenticationManager.authenticate(token);
 
-        if(! authentication.isAuthenticated()){
+        if(!authentication.isAuthenticated()){
             throw new UserNotFoundException("Invalid user name ");
         }
 
@@ -44,35 +48,34 @@ public class AuthServiceImpl implements  AuthService{
 
         Map<String,Object> claims = new HashMap<>();
         if(authentication.isAuthenticated()){
-            String role = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().get(0);
+            String role = authentication.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .toList().get(0);
             claims.put("role",role);
         }
 
-      TokenPayload payload = new TokenPayload(
+        Instant now = Instant.now();
+
+      TokenPayload accessPayload = new TokenPayload(
               claims,
               authentication.getName(),
-              Instant.now(),
-              Instant.now().plusSeconds(300)
+              now,
+              now.plusSeconds(emv.getToken().getAccessToken()),
+              TokenType.ACCESS
       );
 
-        TokenPayload accessPayload = new TokenPayload(
-                claims,
-                authentication.getName(),
-                Instant.now(),
-                Instant.now().plusSeconds(300)
-        );
 
         TokenPayload refreshPayload = new TokenPayload(
                 claims,
                 authentication.getName(),
-                Instant.now(),
-                Instant.now().plusSeconds(86400)
+                now,
+                now.plusSeconds(emv.getToken().getRefreshToken()),
+                TokenType.REFRESH
         );
 
 
-        String jwt = jwtService.createJwtToken(payload);
-        String access = jwtService.accessToken(accessPayload);
-        String refresh = jwtService.refreshToken(refreshPayload);
+        String access= jwtService.createJwtToken(accessPayload);
+        String refresh = jwtService.createJwtToken(refreshPayload);
 
         return new AuthResponse(userDetails.getUserId(),
                                  userDetails.getUsername(),
@@ -85,5 +88,42 @@ public class AuthServiceImpl implements  AuthService{
         );
     }
 
+
+
+
+    @Override
+    public AuthResponse refresh(AuthenticateTokenDetails details) {
+        UserDetails user =  userDetailsRepository.findByEmail(details.email());
+
+        Map<String,Object> claims = new HashMap<>();
+        String role = details.role();
+        claims.put("role",role);
+
+        Instant now = Instant.now();
+
+        TokenPayload accessPayload = new TokenPayload(
+                claims,
+                details.email(),
+                now,
+                now.plusSeconds(emv.getToken().getAccessToken()),
+                TokenType.ACCESS
+        );
+
+
+
+        String accessToken = jwtService.createJwtToken(accessPayload);
+
+
+        return  new AuthResponse(
+                user.getUserId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getUserRole(),
+                accessPayload.expiration().toEpochMilli(),
+                details.tokenExpiration().toEpochMilli(),
+                accessToken,
+                details.authenticateToken()
+        );
+    }
 
 }

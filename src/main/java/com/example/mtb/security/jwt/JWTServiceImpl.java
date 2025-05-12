@@ -1,8 +1,7 @@
 package com.example.mtb.security.jwt;
 
 import com.example.mtb.config.AppEMV;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
@@ -20,6 +19,7 @@ public class JWTServiceImpl {
 
     public String createJwtToken(TokenPayload tokenPayload) {
         return Jwts.builder()
+                .setHeaderParam("type",tokenPayload.tokentype().name())
                 .setClaims(tokenPayload.claims())
                 .setSubject(tokenPayload.subject())
                 .setIssuedAt(new Date(tokenPayload.IssuedAt().toEpochMilli()))
@@ -32,25 +32,17 @@ public class JWTServiceImpl {
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(emv.getToken().getScrete()));
     }
 
-    public String refreshToken(TokenPayload tokenPayload) {
-        return Jwts.builder()
-                .setClaims(tokenPayload.claims())
-                .setSubject(tokenPayload.subject())
-                .setIssuedAt(new Date(tokenPayload.IssuedAt().toEpochMilli()))
-                .setExpiration(new Date(tokenPayload.expiration().toEpochMilli()))
-                .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
 
+    public ExtractedToken pasrseToken(String token){
 
-    public String accessToken(TokenPayload tokenPayload) {
-        return Jwts.builder()
-                .setClaims(tokenPayload.claims())
-                .setSubject(tokenPayload.subject())
-                .setIssuedAt(new Date(tokenPayload.IssuedAt().toEpochMilli()))
-                .setExpiration(new Date(tokenPayload.expiration().toEpochMilli()))
-                .signWith(getSignatureKey(), SignatureAlgorithm.HS256)
-                .compact();
+        try {
+              Jws<Claims> claims= Jwts.parserBuilder().setSigningKey(getSignatureKey()).build().parseClaimsJws(token);
+           ExtractedToken extractToken = new ExtractedToken( claims.getHeader(), claims.getBody());
+           return extractToken;
+        } catch (JwtException ex){
+            return null;
+        }
+
     }
 
 

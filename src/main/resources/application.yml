@@ -18,3 +18,5 @@ spring:
 app:
  token:
    screte: "${TOKEN_SECRET:xPRrtz+X8htTB2iwcGwOD0uAwNwoO6P/PJx/iwNN/Jc=}"
+   access_Token: "${TOKEN_ACCESS_DURATION:300}"
+   refresh_Token : "${TOKEN_REFRESH_DURATION:8600}"
