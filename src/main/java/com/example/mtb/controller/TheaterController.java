@@ -26,8 +26,9 @@ public class TheaterController {
     private ResponseBuilder responseBuilder;
 
 
-    @PreAuthorize("hasAuthority('THEATER_OWNER')")
+
     @PostMapping("/theater/{email}")
+    @PreAuthorize("hasAuthority('THEATER_OWNER')")
     public ResponseEntity<ResponseStructure<TheaterResponse>> registration(@PathVariable String email, @RequestBody TheaterRegistrationRequest request){
         TheaterResponse theater = theaterService.registration(email,request);
 
