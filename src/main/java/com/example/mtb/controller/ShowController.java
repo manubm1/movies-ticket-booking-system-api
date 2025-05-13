@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -28,4 +29,11 @@ public class ShowController {
         return responseBuilder.success(HttpStatus.CREATED,"Show created successfully",response);
     }
 
+     @GetMapping("/shows/{theaterId}")
+    public ResponseEntity<ResponseStructure<ShowResponse>> findShows(String theaterID){
+         ShowResponse response = showService.findShows(theaterID);
+         return responseBuilder.success(HttpStatus.FOUND,"shows fetched successfully",response);
+    }
+
+    
 }

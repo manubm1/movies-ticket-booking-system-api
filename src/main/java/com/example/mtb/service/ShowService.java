@@ -6,4 +6,6 @@ import java.time.Instant;
 
 public interface ShowService {
     ShowResponse createShow(String theaterId, String screenId, String movieId, Instant startsAt);
+
+    ShowResponse findShows(String theaterID);
 }

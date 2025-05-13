@@ -82,4 +82,19 @@ public class ShowImpl implements ShowService {
 
 
     }
+
+    @Override
+    public ShowResponse findShows(String theaterId) {
+
+        Optional<Show> optionalTheater = Optional.ofNullable(showRepository.findById(theaterId)
+                .orElseThrow(() -> new TheaterNotFoundException("there is no theater")));
+//        Show shows = optionalTheater.get();
+
+        if(optionalTheater.isPresent()) {
+            Show shows = optionalTheater.get();
+            return new ShowResponse(shows.getShowId(), shows.getStartsAt(), shows.getEndsAt());
+        }
+        else
+            throw  new ShowNotFoundException("ther is no shows ");
+    }
 }
