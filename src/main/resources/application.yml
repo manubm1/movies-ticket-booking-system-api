@@ -4,7 +4,7 @@ spring:
   datasource:
     url : jdbc:mysql://localhost:3306/movies-tickets-bookingdb?createDatabaseIfNotExist=true
     username: "${MYSQL_USERNAME:root}"
-    password: "${MYSQL_PASSWORD:root}"
+    password: "${MYSQL_PASSWORD}"
 
   jpa:
     open-in-view: false
@@ -20,3 +20,8 @@ app:
    screte: "${TOKEN_SECRET:xPRrtz+X8htTB2iwcGwOD0uAwNwoO6P/PJx/iwNN/Jc=}"
    access_Token: "${TOKEN_ACCESS_DURATION:300}"
    refresh_Token : "${TOKEN_REFRESH_DURATION:8600}"
+
+
+server:
+  servlet:
+    context-path: /api/v1

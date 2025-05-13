@@ -57,4 +57,8 @@ public class Theater {
 
     @OneToMany(mappedBy = "theater")
     private List<Screen> screen;
+
+
+    @OneToMany(mappedBy = "theater", fetch = FetchType.LAZY)
+    private List<Show> shows;
 }

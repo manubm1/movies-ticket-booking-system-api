@@ -49,4 +49,7 @@ public class Show {
     @ManyToOne
     private Movie movie;
 
+    @ManyToOne
+    private Theater theater;
+
 }
