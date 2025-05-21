@@ -69,9 +69,9 @@ public class AuthFilters extends OncePerRequestFilter {
                             email,role,claims.getExpiration().toInstant(),token);
                     request.setAttribute("tokenDetails", tokenDetails);
                 }
-                filterChain.doFilter(request, response);
+//                filterChain.doFilter(request, response);
             }
-            filterChain.doFilter(request, response);
+//            filterChain.doFilter(request, response);
         }
         filterChain.doFilter(request, response);
     }

@@ -74,5 +74,25 @@ public class AplpicationHandler {
 
     }
 
+    @ExceptionHandler
+    public ResponseEntity<ErrorStructure<String>> handlerMovieNotFound(MovieNotFoundException ex){
+        ErrorStructure<String> error = new ErrorStructure<>();
+        error.setErrorCode(HttpStatus.NOT_FOUND.value());
+        error.setErrorMessage(ex.getMessage());
+        error.setError("There is no movie in data base");
 
+        return new ResponseEntity<ErrorStructure<String>>(error,HttpStatus.NOT_FOUND);
+
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorStructure<String>> handlerCityNotFound(CityNotFoundException ex){
+        ErrorStructure<String> error = new ErrorStructure<>();
+        error.setErrorCode(HttpStatus.NOT_FOUND.value());
+        error.setErrorMessage(ex.getMessage());
+        error.setError("There is no city in data base");
+
+        return new ResponseEntity<ErrorStructure<String>>(error,HttpStatus.NOT_FOUND);
+
+    }
 }
