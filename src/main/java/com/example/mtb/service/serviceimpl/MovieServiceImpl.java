@@ -1,6 +1,7 @@
 package com.example.mtb.service.serviceimpl;
 
 import com.example.mtb.dto.CastResponse;
+import com.example.mtb.dto.MovieFetchResponse;
 import com.example.mtb.dto.MovieResponse;
 import com.example.mtb.entity.Feedback;
 import com.example.mtb.entity.Movie;
@@ -50,5 +51,27 @@ public class MovieServiceImpl implements MovieService {
             }
         }
         return new MovieResponse(movie.getTitle(), movie.getDescription(), castResponse, movie.getCertificate(), movie.getGenre(), averages);
+    }
+
+    @Override
+    public  List<MovieFetchResponse> findByName(String name) {
+
+        List<Movie> optionalMovie = movieRepository.findByTitleContainingIgnoreCase(name);
+        List<MovieFetchResponse> response = new ArrayList<>();
+
+
+        for (Movie movie : optionalMovie) {
+            MovieFetchResponse fetch = new MovieFetchResponse(
+                    movie.getTitle(),
+                    movie.getMovieId(),
+                    movie.getDescription(),
+                    movie.getCast().toString(),
+                    movie.getCertificate(),
+                    movie.getGenre()
+            );
+            response.add(fetch);
+        }
+
+        return response;
     }
 }
