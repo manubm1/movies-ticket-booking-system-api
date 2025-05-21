@@ -5,4 +5,6 @@ import com.example.mtb.dto.MovieResponse;
 public interface MovieService {
 
     MovieResponse findById(String movieId);
+
+    String findByName(String name);
 }

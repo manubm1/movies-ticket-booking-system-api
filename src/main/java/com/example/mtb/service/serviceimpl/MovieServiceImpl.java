@@ -51,4 +51,31 @@ public class MovieServiceImpl implements MovieService {
         }
         return new MovieResponse(movie.getTitle(), movie.getDescription(), castResponse, movie.getCertificate(), movie.getGenre(), averages);
     }
+
+    @Override
+    public String findByName(String name) {
+
+        Optional<Movie> optionalMovie = Optional.ofNullable(Optional.ofNullable(movieRepository.findByTitle(name)).
+                orElseThrow(()->new MovieNotFoundException("movie not found")));
+        Movie movie = optionalMovie.get();
+
+
+        Set<String> casts = movie.getCast();
+        Set<CastResponse> castResponse = new HashSet<>();
+
+        if (!casts.isEmpty()) {
+            for (String cast : casts) {
+                String caste = cast;
+                CastResponse response = new CastResponse(caste);
+                castResponse.add(response);
+            }
+        }
+
+
+
+        return movie.getMovieId() ;
+
+    }
+
+
 }

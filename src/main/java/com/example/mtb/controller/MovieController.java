@@ -25,6 +25,15 @@ public class MovieController {
            return responseBuilder.success(HttpStatus.FOUND,"Movie fetched successfully",response);
 
 
-       }
+  }
+
+  @GetMapping("movies/{title}")
+  public ResponseEntity<ResponseStructure<String>> findByname(@PathVariable String title){
+
+      String response = movieService.findByName(title);
+      return responseBuilder.success(HttpStatus.FOUND,"fetched successfully",response);
+
+
+  }
 
 }
