@@ -1,33 +1,28 @@
 package com.example.mtb.service.serviceimpl;
 
-import com.example.mtb.dto.ShowResponse;
+import com.example.mtb.dto.*;
 import com.example.mtb.entity.Movie;
 import com.example.mtb.entity.Screen;
 import com.example.mtb.entity.Show;
 import com.example.mtb.entity.Theater;
-import com.example.mtb.exception.MovieNotFoundException;
-import com.example.mtb.exception.ScreenNotFoundException;
-import com.example.mtb.exception.ShowNotFoundException;
-import com.example.mtb.exception.TheaterNotFoundException;
+import com.example.mtb.exception.*;
 import com.example.mtb.repository.MovieRepository;
 import com.example.mtb.repository.ScreenRepository;
 import com.example.mtb.repository.ShowRepository;
 import com.example.mtb.repository.TheaterRepository;
 import com.example.mtb.service.ShowService;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.time.*;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalAmount;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ShowImpl implements ShowService {
 
     private final ShowRepository showRepository;
@@ -64,6 +59,7 @@ public class ShowImpl implements ShowService {
              Show show = new Show();
              show.setStartsAt(startsAt);
             show.setEndsAt(startsAt.plus(duration));
+            show.setTheater(theater);
             show.setScreen(screen);
 
             List<Show> showlist = new ArrayList<>();
@@ -96,5 +92,135 @@ public class ShowImpl implements ShowService {
         }
         else
             throw  new ShowNotFoundException("ther is no shows ");
+    }
+
+    @Override
+    public Page<ShowProjection> findShowsByMovieId(String movieId, ShowsRequest request,String city) {
+
+//        Pageable pages = PageRequest.of(request.number(), request.size());
+        int pageNumber = Math.max(0, request.number());  // prevents negative or too-high values
+        int pageSize = request.size();
+
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+
+        ZoneId zoneId = request.zoneId() == null || request.zoneId().isBlank()
+                ? ZoneId.of("UTC")
+                : ZoneId.of(ZoneId.SHORT_IDS.getOrDefault(request.zoneId(), "UTC"));
+
+        ZonedDateTime start = request.date().atStartOfDay(zoneId);
+        ZonedDateTime end = request.date().plusDays(1).atStartOfDay(zoneId);
+
+        Instant startAt = start.toInstant();
+        Instant endsAt = end.toInstant();
+
+        log.info(String.valueOf(startAt));
+        log.info(String.valueOf(endsAt));
+
+
+          Optional<Theater> theaters= Optional.ofNullable(Optional.ofNullable(theaterRepository.findByCity(city))
+                  .orElseThrow(() -> new CityNotFoundException(" Invalid City")));
+
+        Page<Show> showspage = showRepository.findDistinctTheaterIdsByMovieAndTimeAndScreenTypeAndCity(movieId,startAt,endsAt,request.screenType(),city,pageable);
+
+
+
+
+//
+        List<Show> showsList =showspage.getContent();
+//        List<ShowResponse> shows = new ArrayList<>();
+//
+//        for(Show show :showsList){
+//            ShowResponse response = new ShowResponse(show.getShowId(),show.getStartsAt(),show.getEndsAt());
+//            shows.add(response);
+//        }
+//
+//        Set<ShowMovieResponse> sets = new HashSet<>();
+//
+//        for(Show show :showsList){
+//            ShowMovieResponse response = new ShowMovieResponse(show.getTheater().getTheaterId(),
+//                    show.getTheater().getName(),show.getTheater().getAddress());
+//            sets.add(response);
+////        }
+//
+//
+//        Page<ShowProjection> projections = showspage.map(show -> new ShowProjection(
+//                show.getTheater().getTheaterId(),
+//                show.getTheater().getName(),
+//                show.getTheater().getAddress(),
+//                shows// or null, or multiple shows if grouped
+//        ));
+//
+//
+//
+//        return projections;
+//
+//
+//
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        Map<String, List<Show>> groupedByTheater = showsList.stream()
+                .collect(Collectors.groupingBy(show -> show.getTheater().getTheaterId()));
+
+// Step 2: Convert to ShowProjections
+        List<ShowProjection> projectionList = groupedByTheater.entrySet().stream()
+                .map(entry -> {
+                    String theaterId = entry.getKey();
+                    List<Show> theaterShows = entry.getValue();
+                    Theater theater = theaterShows.get(0).getTheater(); // all shows share the same theater
+
+                    List<ShowResponse> theaterShowResponses = theaterShows.stream()
+                            .map(show -> new ShowResponse(show.getShowId(), show.getStartsAt(), show.getEndsAt()))
+                            .collect(Collectors.toList());
+
+                    return new ShowProjection(
+                            theaterId,
+                            theater.getName(),
+                            theater.getAddress(),
+                            theaterShowResponses
+                    );
+                })
+                .toList();
+
+// Step 3: Create a Page manually (if needed)
+        Page<ShowProjection> projections = new PageImpl<>(projectionList, pageable, projectionList.size());
+
+
+
+
+
+
+
+
+
+
+
+
+
+  return projections;
     }
 }
