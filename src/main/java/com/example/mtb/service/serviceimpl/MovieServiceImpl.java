@@ -1,6 +1,7 @@
 package com.example.mtb.service.serviceimpl;
 
 import com.example.mtb.dto.CastResponse;
+import com.example.mtb.dto.MovieFetchResponse;
 import com.example.mtb.dto.MovieResponse;
 import com.example.mtb.entity.Feedback;
 import com.example.mtb.entity.Movie;
@@ -53,29 +54,24 @@ public class MovieServiceImpl implements MovieService {
     }
 
     @Override
-    public String findByName(String name) {
+    public  List<MovieFetchResponse> findByName(String name) {
 
-        Optional<Movie> optionalMovie = Optional.ofNullable(Optional.ofNullable(movieRepository.findByTitle(name)).
-                orElseThrow(()->new MovieNotFoundException("movie not found")));
-        Movie movie = optionalMovie.get();
+        List<Movie> optionalMovie = movieRepository.findByTitleContainingIgnoreCase(name);
+        List<MovieFetchResponse> response = new ArrayList<>();
 
 
-        Set<String> casts = movie.getCast();
-        Set<CastResponse> castResponse = new HashSet<>();
-
-        if (!casts.isEmpty()) {
-            for (String cast : casts) {
-                String caste = cast;
-                CastResponse response = new CastResponse(caste);
-                castResponse.add(response);
-            }
+        for (Movie movie : optionalMovie) {
+            MovieFetchResponse fetch = new MovieFetchResponse(
+                    movie.getTitle(),
+                    movie.getMovieId(),
+                    movie.getDescription(),
+                    movie.getCast().toString(),
+                    movie.getCertificate(),
+                    movie.getGenre()
+            );
+            response.add(fetch);
         }
 
-
-
-        return movie.getMovieId() ;
-
+        return response;
     }
-
-
 }
